@@ -1,0 +1,10 @@
+from minecraft_obfuscate.Objective import ObfuscateBase
+
+
+class Tag(ObfuscateBase):
+    def __init__(self, name):
+        regex_patters = (
+            r"(.\[\S*tag=!?)({name})(\S*\])",
+            r"(tag \S+ (?:add|remove) )({name})()"
+        )
+        super().__init__(name, regex_patters)
