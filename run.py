@@ -16,6 +16,9 @@ target_path = config["target_path"]
 output_path = config["output_path"]
 blacklist = config["blacklist"]
 
+if target_path is None or output_path is None:
+    raise Exception("The config.json is not propper 'target_path' and 'output_path' must have paths")
+
 globs = glob.glob(target_path + "\\**\\*.mcfunction", recursive=True)
 obfuscate_objects = []
 
@@ -38,6 +41,8 @@ def find_obfuscate_objects(patterns, blacklist_type=""):
         for blacklist_item in blacklist[blacklist_type]:
             if blacklist_item in results:
                 results.remove(blacklist_item)
+            if config["greedy_blacklist"]:
+                results = [result for result in results if blacklist_item not in result]
     return results
 
 
@@ -92,16 +97,20 @@ import pprint
 
 for function_file in function_files:
     function_file.obfuscate(context)
-    function_file.sync_file_name(context["key"]["functions"])
     function_file.write_file()
 
 """
 To do:
 
 - Test if functions actually work in Minecraft
-- Make blacklist work for function file names instead of only functions inside file 
 - Output the context.json with date
-- Build a gui (without tkinter go fuck yourself) web gui?? this would solve problems
+- Build a gui 
+- make blacklist work with function names
+- Build a web gui (without tkinter go fuck yourself) web gui?? this would solve problems
+
+-1 1
+-3 2
+
 """
 
 

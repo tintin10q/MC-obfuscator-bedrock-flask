@@ -59,4 +59,20 @@ class Database():
 db = Database()
 
 # Will capture config as it is on startup for live config do db.get("config")
-config = db.get("config") if os.path.exists(str(Database.my_path)+"/config.json") else {}
+if not os.path.exists(Database.my_path + "\\config.json"):
+    print("created new config")
+    new_config = {
+        "blacklist": {
+            "objectives": [],
+            "tags": [],
+            "fake_players": [],
+            "functions": []
+        },
+        "greedy_blacklist": False,
+        "target_path": None,
+        "output_path": None,
+        "character_pool": "0O",
+        "character_length": 16
+    }
+    db.set("config", new_config)
+config = db.get("config") if os.path.exists(str(Database.my_path) + "/config.json") else {}
