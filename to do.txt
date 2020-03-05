@@ -1,0 +1,7 @@
+- make yt video explaining tool
+- make blacklist work per type
+- make sending zips actually work and return a zip
+- test if obfuscator actually works
+- make file drop area
+- java code?
+- include key file option
