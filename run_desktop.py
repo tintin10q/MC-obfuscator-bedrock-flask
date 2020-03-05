@@ -1,7 +1,8 @@
+import operator
 import glob
 import os
 import re
-
+import json
 from database.database_manager import db
 from minecraft_obfuscate.FakePlayer import FakePlayer
 from minecraft_obfuscate.Function import Function
@@ -29,7 +30,7 @@ function_files = [FunctionFile(glob, output_path) for glob in globs]
 
 all_text = ""
 for function_file in function_files:
-    all_text += function_file.text
+    all_text += function_file.text + "\n"  # Damm that was a nasty one for sure
 
 
 def find_obfuscate_objects(patterns, blacklist_type=""):
@@ -56,7 +57,9 @@ objective_patterns = (
 
 tag_patterns = (
     r"tag=(\w+)",
-    r"tag \S+ (?:add|remove) (\S+)"
+    r"tag \S+ (?:add|remove) (\S+)",
+    r"name=(\w+)",
+    r"summon\s\S+\s[\~\^]?[\+\-]{0,}[0-9]{0,}\s[\~\^]?[\+\-]{0,}[0-9]{0,}\s[\~\^]?[\+\-]{0,}[0-9]{0,}\s\S+\s(\w+)"
 )
 
 fake_player_patterns = (
@@ -65,14 +68,16 @@ fake_player_patterns = (
     r"scoreboard players operation \S+ \S+ (?:%=|\*=|\+=|-=|/=|<|=|>|><) ([^@]\S+)"
 )
 
+# if you only have one pattern make sure to make it a list!
 function_patterns = [
-    r"function (.+)"
+    r"function (\S+)"
 ]
 
 tags = find_obfuscate_objects(tag_patterns, "tags")
 objectives = find_obfuscate_objects(objective_patterns, "objectives")
 fake_players = find_obfuscate_objects(fake_player_patterns, "fake_players")
 functions = find_obfuscate_objects(function_patterns, "functions")
+
 
 for tag in tags:
     obfuscate_objects.append(Tag(tag))
@@ -83,13 +88,15 @@ for fake_player in fake_players:
 for function in functions:
     obfuscate_objects.append(Function(function))
 
+obfuscate_objects.sort(key=operator.attrgetter('len'),reverse=True)  # sort the list so longer names get replaced first
+
 # Generate key
 context = {"key": {"objectives": [objective.key for objective in obfuscate_objects if isinstance(objective, Objective)],
                    "tags": [tag.key for tag in obfuscate_objects if isinstance(tag, Tag)],
                    "fake_players": [fake_player.key for fake_player in obfuscate_objects if
                                     isinstance(fake_player, FakePlayer)],
                    "functions": [function.key for function in obfuscate_objects if isinstance(function, Function)]},
-           "obfuscate_objects": obfuscate_objects,
+           "obfuscate_objects":obfuscate_objects,
            "blacklist": blacklist}
 
 import pprint
@@ -99,14 +106,20 @@ for function_file in function_files:
     function_file.obfuscate(context)
     function_file.write_file()
 
+
+def generate_output_context(context):
+    return context
+
+if config["output_context"]:
+
+    context.pop("obfuscate_objects")
+    json.dump(context,open(output_path+"\\context.json", "w+"), indent=4, sort_keys=True)
 """
 To do:
 
 - Test if functions actually work in Minecraft
 - Output the context.json with date
 - Build a gui 
-- make blacklist work with function names
-- Build a web gui (without tkinter go fuck yourself) web gui?? this would solve problems
 
 -1 1
 -3 2

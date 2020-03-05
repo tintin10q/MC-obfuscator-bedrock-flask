@@ -17,7 +17,6 @@ class FunctionFile:
         return self.text
 
     def write_file(self):
-        print("Output path2 {}".format(self.output_file_path))
         if not os.path.exists(self.output_path):
             os.makedirs(self.output_path)
         open(self.output_file_path, "w+").write(self.text)
@@ -32,7 +31,7 @@ class FunctionFile:
     def check_blacklist(self):
         # This will change the output path
         function_blacklist = config["blacklist"]["functions"]
-        if self.call_name in function_blacklist:
+        if self.call_name in function_blacklist: # or True to disable for debugging
             self.output_file_path = self.set_file_path(self.call_name)
             self.output_path = os.path.split(self.output_file_path)[0]
             return
