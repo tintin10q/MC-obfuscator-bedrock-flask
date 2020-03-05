@@ -62,17 +62,18 @@ db = Database()
 if not os.path.exists(Database.my_path + "\\config.json"):
     print("created new config")
     new_config = {
-        "blacklist": {
-            "objectives": [],
-            "tags": [],
-            "fake_players": [],
-            "functions": []
-        },
-        "greedy_blacklist": False,
-        "target_path": None,
-        "output_path": None,
-        "character_pool": "0O",
-        "character_length": 16
-    }
+    "blacklist": {
+        "fake_players": [],
+        "functions": [],
+        "objectives": [],
+        "tags": []
+    },
+    "output_context": False,
+    "remove_comments": True,
+    "character_length": 16,
+    "character_pool": "0O",
+    "greedy_blacklist": False,
+    "output_path": "",
+    "target_path": ""}
     db.set("config", new_config)
 config = db.get("config") if os.path.exists(str(Database.my_path) + "/config.json") else {}
