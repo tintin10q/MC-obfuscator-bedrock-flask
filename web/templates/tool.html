@@ -8,6 +8,12 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href='{{url_for("static", filename="css/bootstrap.css")}}'>
     <title>Minecraft code obfuscator</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
 </head>
 <body>
 <br>
@@ -16,6 +22,15 @@
         <h1>Minecraft code obfuscator</h1>
         <p class="lead">Protect your minecraft bedrock code!</p>
     </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+
+    <div class="alert alert-dismissible fade show alert-{{ category }}"> {{ message }}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endfor %}
+    {% endwith %}
+
 </div>
 <div class="container">
     <div class="row">
@@ -25,15 +40,17 @@
 
         <div class="col-sm-7">
 
-            <form action="." method="post">
+            <form action="." method="post" enctype=multipart/form-data>
                 <b><label for="blacklist_all"> Blacklist: </label></b>
 
                 <div class="form-row" id="blacklist_all">
                     <div class="form-group col-3">
                         <label for="b1">Functions</label>
-                        <textarea class="form-control" id="function_blacklist" name="function_blacklist" rows="3" placeholder="Functions"></textarea>
+                        <textarea class="form-control" id="function_blacklist" name="function_blacklist" rows="3"
+                                  placeholder="Functions"></textarea>
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" name="greedy_functions" id="greedy_functions">
+                            <input type="checkbox" class="form-check-input" name="greedy_functions"
+                                   id="greedy_functions">
                             <label class="form-check-label" for="greedy_functions">Greedy</label>
                         </div>
                         <div class="form-check">
@@ -44,9 +61,11 @@
                     </div>
                     <div class="form-group col-3">
                         <label for="b1">Objectives</label>
-                        <textarea class="form-control" id="objective_blacklist" rows="3" name="objective_blacklist" placeholder="Objectives"></textarea>
+                        <textarea class="form-control" id="objective_blacklist" rows="3" name="objective_blacklist"
+                                  placeholder="Objectives"></textarea>
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" name="greedy_objectives" id="greedy_objectives">
+                            <input type="checkbox" class="form-check-input" name="greedy_objectives"
+                                   id="greedy_objectives">
                             <label class="form-check-label" for="greedy_objectives">Greedy</label>
                         </div>
                         <div class="form-check">
@@ -57,20 +76,24 @@
                     </div>
                     <div class="form-group col-3">
                         <label for="b1">Fakeplayers</label>
-                        <textarea class="form-control" id="fakeplayers_blacklist" name="fakeplayers_blacklist" rows="3" placeholder="Fakeplayers"></textarea>
+                        <textarea class="form-control" id="fakeplayers_blacklist" name="fakeplayers_blacklist" rows="3"
+                                  placeholder="Fakeplayers"></textarea>
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" name="greedy_fakeplayers" id="greedy_fakeplayers">
+                            <input type="checkbox" class="form-check-input" name="greedy_fakeplayers"
+                                   id="greedy_fakeplayers">
                             <label class="form-check-label" for="greedy_fakeplayers">Greedy</label>
                         </div>
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" name="skip_fake_players" id="skip_fake_players">
+                            <input type="checkbox" class="form-check-input" name="skip_fake_players"
+                                   id="skip_fake_players">
                             <label class="form-check-label" for="skip_fake_players">Skip</label>
                         </div>
 
                     </div>
                     <div class="form-group col-3">
-                        <label for="b1">Tags</label>
-                        <textarea class="form-control" id="tags_blacklist" name="tags_blacklist" rows="3" placeholder="Tags"></textarea>
+                        <label for="b1">Tags+names</label>
+                        <textarea class="form-control" id="tag_blacklist" name="tag_blacklist" rows="3"
+                                  placeholder="Tags"></textarea>
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" name="greedy_tags" id="greedy_tags">
                             <label class="form-check-label" for="greedy_tags">Greedy</label>
@@ -79,11 +102,8 @@
                             <input type="checkbox" class="form-check-input" name="skip_tags" id="skip_tags">
                             <label class="form-check-label" for="skip_tags">Skip</label>
                         </div>
-
-
                     </div>
                 </div>
-
                 <div class="form-row">
                     <div class="form-group col-6">
                         <label for="character_pool">Character pool</label>
@@ -103,15 +123,13 @@
                 </div>
                 <div class="form-group">
                     <label for="datapack">Datapack zip folder</label>
-                    <input type="file" accept="application/zip" name="datapack_zip_file" class="form-control-file" id="datapack">
+                    <input type="file" accept="application/zip" name="datapack_zip_file" class="form-control-file"
+                           id="datapack" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Obfuscate!</button>
             </form>
-
         </div>
     </div>
 </div>
-
-
 </body>
 </html>

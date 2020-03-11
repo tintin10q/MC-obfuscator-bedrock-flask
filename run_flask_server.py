@@ -9,6 +9,7 @@ web_config = db.get("web_config")
 
 
 app = Flask(__name__, template_folder="web//templates", static_folder="web//static")
+app.config["SECRET_KEY"] = web_config["SECRET_KEY"]
 app.register_blueprint(tool_blueprint)
 # app.run()
 

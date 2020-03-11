@@ -1,19 +1,12 @@
 import glob
 import os
 import re
-
 from database.database_manager import db
 from minecraft_obfuscate.FakePlayer import FakePlayer
 from minecraft_obfuscate.Function import Function
 from minecraft_obfuscate.FunctionFile import FunctionFile
 from minecraft_obfuscate.Objective import Objective
 from minecraft_obfuscate.Tag import Tag
-
-def obfuscate_zip(zip_file, config):
-    target_path = config["target_path"]
-    output_path = config["output_path"]
-    blacklist = config["blacklist"]
-
 import operator
 import glob
 import os
@@ -25,6 +18,25 @@ from minecraft_obfuscate.Function import Function
 from minecraft_obfuscate.FunctionFile import FunctionFile
 from minecraft_obfuscate.Objective import Objective
 from minecraft_obfuscate.Tag import Tag
+
+
+def find_obfuscate_objects(patterns, blacklist_type=""):
+    patterns = [re.compile(r) for r in patterns]
+    results = [re.findall(r, all_text) for r in patterns]
+    results = [item for sublist in results for item in sublist]  # Flatten the list
+    results = list(set(results))  # Remove duplicates
+    if blacklist_type in ("objectives", "tags", "fake_players", "functions"):
+        for blacklist_item in blacklist[blacklist_type]:
+            if blacklist_item in results:
+                results.remove(blacklist_item)
+            if config["greedy_blacklist"]:
+                results = [result for result in results if blacklist_item not in result]
+    return results
+
+def obfuscate_zip(zip_file, config):
+    target_path = config["target_path"]
+    output_path = config["output_path"]
+    blacklist = config["blacklist"]
 
 db.reset()
 
@@ -49,18 +61,6 @@ for function_file in function_files:
     all_text += function_file.text + "\n"  # Damm that was a nasty one for sure
 
 
-def find_obfuscate_objects(patterns, blacklist_type=""):
-    patterns = [re.compile(r) for r in patterns]
-    results = [re.findall(r, all_text) for r in patterns]
-    results = [item for sublist in results for item in sublist]  # Flatten the list
-    results = list(set(results))  # Remove duplicates
-    if blacklist_type in ("objectives", "tags", "fake_players", "functions"):
-        for blacklist_item in blacklist[blacklist_type]:
-            if blacklist_item in results:
-                results.remove(blacklist_item)
-            if config["greedy_blacklist"]:
-                results = [result for result in results if blacklist_item not in result]
-    return results
 
 
 objective_patterns = (
