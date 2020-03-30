@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel='icon' href='{{url_for("static", filename="favicon.ico")}}' type='image/x-icon' sizes="16x16"/>
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href='{{url_for("static", filename="css/bootstrap.css")}}'>
+    <link rel="stylesheet" href='{{url_for("static", filename="css/bootstrap_dark.css")}}'>
     <title>Minecraft code obfuscator</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -114,17 +114,23 @@
                         </select>
                     </div>
                     <div class="form-group col-6">
-                        <label for="name_lenght">Name length</label>
+                        <label for="name_length">Name length</label>
                         <input type="number" value="16" min="2" max="16" class="form-control"
-                               id="name_lenght"
-                               name="name_lenght"
-                               placeholder="Name lenght">
+                               id="name_length"
+                               name="name_length"
+                               placeholder="Name length">
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-row ">
+                <div class="form-group col-md-6">
                     <label for="datapack">Datapack zip folder</label>
                     <input type="file" accept="application/zip" name="datapack_zip_file" class="form-control-file"
                            id="datapack" required>
+                </div>
+                    <div class="form-group col-md-6">
+                        <label for="context-file">Include changes json</label>
+                        <input type="checkbox" name="context-file" id="context-file" class="form-control-checkbox">
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Obfuscate!</button>
             </form>

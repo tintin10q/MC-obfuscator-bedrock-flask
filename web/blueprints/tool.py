@@ -1,34 +1,26 @@
 import io
 import zipfile
 
-from flask import Blueprint, render_template, request, redirect, flash
+from flask import Blueprint, render_template, request, redirect, flash, send_file, Response
 from minecraft_obfuscate.obfuscate_zip import obfuscate_zip
 from werkzeug.utils import secure_filename
-from minecraft_obfuscate.IDgenerator import id_gen
+from utils.IDgenerator import id_gen
+from utils.allowed_file import allowed_file
 # obfuscate_zip()
 
 tool_blueprint = Blueprint('main', __name__)
 
 
 @tool_blueprint.route("/", methods=["GET"])
-def tool_post():
-    print("cool")
+def tool_get():
     return render_template("tool.html")
 
 
-def allowed_file(filename):
-    if filename.split(".")[-1] in ("zip"):
-        return True
-    else:
-        return False
-
-
 @tool_blueprint.route("/", methods=["POST"])
-def tool_get():
+def tool_post():
     # check if the post request has the file part
     if 'datapack_zip_file' not in request.files:
-        flash('Could not find file with html name "datapack_zip_file"',
-              'danger')  # Catogories danger, succes, warning and info
+        flash('Could not find file with html name "datapack_zip_file"', 'danger')
         return redirect(request.url)
     file = request.files['datapack_zip_file']
     # if user does not select file, browser also submit an empty part without filename
@@ -43,16 +35,15 @@ def tool_get():
     config = {'function_blacklist': '', 'greedy_functions': False, 'skip_functions': False, 'objective_blacklist': '',
               'greedy_objectives': False, 'skip_objectives': False, 'fake_players_blacklist': '',
               'greedy_fake_players': False, 'skip_fake_players': False, 'tag_blacklist': "", 'greedy_tags': False,
-              'skip_tags': False, 'character_pool': 'O0', 'name_lenght': 16, 'datapack_zip_file': ''}
+              'skip_tags': False, 'character_pool': 'O0', 'name_length': 16, 'datapack_zip_file': ''}
 
     config.update(request.form.to_dict())
-
-    #  Confirm that name lenght is an int
-    if type(config["name_lenght"]) == str:
+    #  Confirm that name length is an int
+    if type(config["name_length"]) == str:
         try:
-            config["name_lenght"] = int(config["name_lenght"])
+            config["name_length"] = int(config["name_length"])
         except:
-            flash("Name lenght was not a number!", "warning")
+            flash("Name length was not a number!", "warning")
             return redirect(request.url)
 
     # format config a bit better # please dont change \r\n that would be an annoying bug to fix
@@ -78,10 +69,8 @@ def tool_get():
     # Filter names to only include the filetype that you want:
     file_names = [file_name for file_name in file_names if file_name.endswith(".mcfunction")]
     files = [(path, zipfile_ob.open(path).read().decode("utf-8")) for path in file_names]
-
     #  Reset id_gen
-    id_gen.reset(config["character_pool"], config["name_lenght"])
+    id_gen.reset(config["character_pool"], config["name_length"])
 
-    print(id_gen.used_UUIDs)
-    obfuscate_zip(files, config)
-    return redirect(request.url)
+    final_zip = obfuscate_zip(files, config)
+    return send_file(final_zip, mimetype='application/zip',attachment_filename=filename, as_attachment=True)
