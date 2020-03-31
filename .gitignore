@@ -1,5 +1,4 @@
 .idea
 __pycache__
-config.json
-used_uuids.json
 venv/
+
