@@ -18,8 +18,17 @@ def find_obfuscate_objects(text, patterns, blacklist):
     results = [re.findall(r, text) for r in patterns]
     results = [item for sublist in results for item in sublist]  # Flatten the list
     results = list(set(results))  # Remove duplicates
-    if blacklist["skip"]:
-        return results
+    if blacklist["whitelist"]:
+        whitelist = []
+        for item in results:
+
+            if item in blacklist["blacklist"]:
+                whitelist.append(item)
+            if blacklist["greedy"]:
+                for whitelist_item in blacklist["blacklist"]:
+                    if whitelist_item in item:
+                        whitelist.append(item)
+        return whitelist
     else:
         for blacklist_item in blacklist["blacklist"]:
             if blacklist_item in results:
@@ -105,7 +114,6 @@ def obfuscate_zip(zip_files, config):
         "obfuscate_objects": obfuscate_objects,
         "blacklist": blacklist}
     zip_buffer = io.BytesIO()
-    print(context)
     with zipfile.ZipFile(zip_buffer, mode='w') as zf:
         for function_file in function_files:
             function_file.obfuscate(context)

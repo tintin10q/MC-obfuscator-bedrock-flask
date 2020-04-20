@@ -7,7 +7,6 @@
     <meta name="description" content="A tool for obfuscating minecraft bedrock command code."/>
     <meta name="keywords" content="obfuscation, minecraft, code, bedrock, tool">
     <meta name="author" content="Quinten Cabo">
-    <meta name="og:title" property="og:title" content="Minecraft code obfuscato">
     <link rel='icon' href='{{url_for("static", filename="favicon.ico")}}' type='image/x-icon' sizes="16x16"/>
 
     <!-- Bootstrap CSS -->
@@ -44,7 +43,7 @@
         <div class="row">
             <div class="col-sm-5">
                 <img src="{{url_for('static', filename='logo.png')}}" class="img-fluid"
-                     alt="minecraft obfuscator webstie logo ">
+                     alt="minecraft obfuscator website logo ">
             </div>
 
             <div class="col-sm-7">
@@ -61,15 +60,15 @@
                                 <input type="checkbox" class="form-check-input" name="greedy_functions"
                                        id="greedy_functions">
                                 <label class="form-check-label" for="greedy_functions" data-toggle="tooltip"
-                                       title="A partial match is enough. So if 'main' is on the blacklist then all functions with 'main' in it like 'trace/main' are not obfuscated.">Partial
-                                    match ⓘ</label>
+                                       title="A partial match is enough to be blacklisted so 'hi' on the blacklist would blacklist 'hi_there'">
+                                    Partial match ⓘ</label>
                             </div>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" name="skip_functions"
-                                       id="skip_functions">
-                                <label class="form-check-label" for="skip_functions" data-toggle="tooltip"
-                                       title="Make the blacklist a whitelist instead.">Whitelist</label>
-                            </div>
+<!--                            <div class="form-check">-->
+<!--                                <input type="checkbox" class="form-check-input" name="whitelist_functions"-->
+<!--                                       id="whitelist_functions">-->
+<!--                                <label class="form-check-label" for="whitelist_functions" data-toggle="tooltip"-->
+<!--                                       title="Make the blacklist a whitelist instead. So only obfuscate these names.">Whitelist</label>-->
+<!--                            </div>-->
 
                         </div>
                         <div class="form-group col-3">
@@ -80,14 +79,14 @@
                                 <input type="checkbox" class="form-check-input" name="greedy_objectives"
                                        id="greedy_objectives">
                                 <label class="form-check-label" data-toggle="tooltip"
-                                       title="A partial match is enough. So if 'id' is on the blacklist then all objectives with 'id' in it like 'id_1' are not obfuscated."
+                                       title="A partial match is enough to be blacklisted so 'hi' on the blacklist would blacklist 'hi_there'"
                                        for="greedy_objectives">Partial match ⓘ</label>
                             </div>
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" name="skip_objectives"
-                                       id="skip_objectives">
-                                <label class="form-check-label" for="skip_objectives" data-toggle="tooltip"
-                                       title="Make the blacklist a whitelist instead.">Whitelist</label>
+                                <input type="checkbox" class="form-check-input" name="whitelist_objectives"
+                                       id="whitelist_objectives">
+                                <label class="form-check-label" for="whitelist_objectives" data-toggle="tooltip"
+                                       title="Make the blacklist a whitelist instead. So only obfuscate these names.">Whitelist</label>
                             </div>
 
                         </div>
@@ -100,14 +99,14 @@
                                 <input type="checkbox" class="form-check-input" name="greedy_fake_players"
                                        id="greedy_fake_players">
                                 <label class="form-check-label" data-toggle="tooltip"
-                                       title="A partial match is enough. So if 'id' is on the blacklist then all fakeplayers with 'id' in it like 'id_1' are not obfuscated."
+                                       title="A partial match is enough to be blacklisted so 'hi' on the blacklist would blacklist 'hi_there'"
                                        for="greedy_fake_players">Partial match ⓘ</label>
                             </div>
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" name="skip_fake_players"
-                                       id="skip_fake_players">
-                                <label class="form-check-label" for="skip_fake_players" data-toggle="tooltip"
-                                       title="Make the blacklist a whitelist instead.">Whitelist</label>
+                                <input type="checkbox" class="form-check-input" name="whitelist_fake_players"
+                                       id="whitelist_fake_players">
+                                <label class="form-check-label" for="whitelist_fake_players" data-toggle="tooltip"
+                                       title="Make the blacklist a whitelist instead. So only obfuscate these names.">Whitelist</label>
                             </div>
 
                         </div>
@@ -118,13 +117,13 @@
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input" name="greedy_tags" id="greedy_tags">
                                 <label class="form-check-label" for="greedy_tags" data-toggle="tooltip"
-                                       title="A partial match is enough. So if 'id' is on the blacklist then all tags and names with 'id' in it like 'id_1' are not obfuscated.">Partial
+                                       title="A partial match is enough to be blacklisted so 'hi' on the blacklist would blacklist 'hi_there'">Partial
                                     match ⓘ</label>
                             </div>
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" name="skip_tags" id="skip_tags">
-                                <label class="form-check-label" for="skip_tags" data-toggle="tooltip"
-                                       title="Make the blacklist a whitelist instead.">Whitelist</label>
+                                <input type="checkbox" class="form-check-input" name="whitelist_tags" id="whitelist_tags">
+                                <label class="form-check-label" for="whitelist_tags" data-toggle="tooltip"
+                                       title="Make the blacklist a whitelist instead. So only obfuscate these names.">Whitelist</label>
                             </div>
                         </div>
                     </div>
@@ -135,6 +134,7 @@
                                 <option>O0</option>
                                 <option>WV</option>
                                 <option>NM</option>
+                                <option>abcdefghijklmnopqrstuvwxyz_0123456789</option>
                             </select>
                         </div>
                         <div class="form-group col-6">

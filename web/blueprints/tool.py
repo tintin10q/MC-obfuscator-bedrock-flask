@@ -32,10 +32,10 @@ def tool_post():
         flash('File does not end with a .zip file extension', "warning")
         return redirect(request.url)
 
-    config = {'function_blacklist': '', 'greedy_functions': False, 'skip_functions': False, 'objective_blacklist': '',
-              'greedy_objectives': False, 'skip_objectives': False, 'fake_players_blacklist': '',
-              'greedy_fake_players': False, 'skip_fake_players': False, 'tag_blacklist': "", 'greedy_tags': False,
-              'skip_tags': False, 'character_pool': 'O0', 'name_length': 16, 'datapack_zip_file': ''}
+    config = {'function_blacklist': '', 'greedy_functions': False, 'whitelist_functions': False, 'objective_blacklist': '',
+              'greedy_objectives': False, 'whitelist_objectives': False, 'fake_players_blacklist': '',
+              'greedy_fake_players': False, 'whitelist_fake_players': False, 'tag_blacklist': "", 'greedy_tags': False,
+              'whitelist_tags': False, 'character_pool': 'O0', 'name_length': 16, 'datapack_zip_file': ''}
 
     config.update(request.form.to_dict())
     #  Confirm that name length is an int
@@ -49,19 +49,19 @@ def tool_post():
     # format config a bit better # please dont change \r\n that would be an annoying bug to fix
     config["blacklist"] = {"functions": {"blacklist": config.pop("function_blacklist").split("\r\n"),
                                          "greedy": config.pop("greedy_functions"),
-                                         "skip": config.pop("skip_functions"),
+                                         "whitelist": config.pop("whitelist_functions"),
                                          },
                            "objectives": {"blacklist": config.pop("objective_blacklist").split("\r\n"),
                                           "greedy": config.pop("greedy_objectives"),
-                                          "skip": config.pop("skip_objectives"),
+                                          "whitelist": config.pop("whitelist_objectives"),
                                           },
                            "tags": {"blacklist": config.pop("tag_blacklist").split("\r\n"),
                                     "greedy": config.pop("greedy_tags"),
-                                    "skip": config.pop("skip_tags"),
+                                    "whitelist": config.pop("whitelist_tags"),
                                     },
                            "fake_players": {"blacklist": config.pop("fake_players_blacklist").split("\r\n"),
                                            "greedy": config.pop("greedy_fake_players"),
-                                           "skip": config.pop("skip_fake_players")}}
+                                           "whitelist": config.pop("whitelist_fake_players")}}
     #  Magic zip code
     file_like_object = file.stream._file
     zipfile_ob = zipfile.ZipFile(file_like_object)
