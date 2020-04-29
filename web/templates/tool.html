@@ -3,21 +3,22 @@
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="A tool for obfuscating minecraft bedrock command code."/>
-    <meta name="keywords" content="obfuscation, minecraft, code, bedrock, tool">
-    <meta name="author" content="Quinten Cabo">
-    <link rel='icon' href='{{url_for("static", filename="favicon.ico")}}' type='image/x-icon' sizes="16x16"/>
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta content="A tool for obfuscating minecraft bedrock command code." name="description"/>
+    <meta content="obfuscation, minecraft, code, bedrock, tool" name="keywords">
+    <meta content="Quinten Cabo" name="author">
+    <link href='{{url_for("static", filename="favicon.ico")}}' rel='icon' sizes="16x16" type='image/x-icon'/>
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href='{{url_for("static", filename="css/bootstrap_dark.css")}}'>
+    <link href='{{url_for("static", filename="css/bootstrap_dark.css")}}' rel="stylesheet">
     <title>Minecraft code obfuscator</title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script data-ad-client="ca-pub-9825615766394229" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script async data-ad-client="ca-pub-9825615766394229"
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
 <body>
 <br>
@@ -31,7 +32,7 @@
         {% for category, message in messages %}
 
         <div class="alert alert-dismissible fade show alert-{{ category }}"> {{ message }}
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <button class="close" data-dismiss="alert" type="button">&times;</button>
         </div>
         {% endfor %}
         {% endwith %}
@@ -42,50 +43,53 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-5">
-                <img src="{{url_for('static', filename='logo.png')}}" class="img-fluid"
-                     alt="minecraft obfuscator website logo ">
+                <img alt="minecraft obfuscator website logo " class="img-fluid"
+                     src="{{url_for('static', filename='logo.png')}}">
             </div>
 
             <div class="col-sm-7">
 
-                <form action="." method="post" enctype=multipart/form-data>
+                <form action="." enctype=multipart/form-data method="post">
                     <b><label for="blacklist_all"> Blacklist: </label></b>
 
                     <div class="form-row" id="blacklist_all">
                         <div class="form-group col-3">
                             <label for="function_blacklist">Functions:</label>
-                            <textarea class="form-control" id="function_blacklist" name="function_blacklist" rows="3"
-                                      placeholder="Functions"></textarea>
+                            <textarea class="form-control" id="function_blacklist" name="function_blacklist"
+                                      placeholder="Functions"
+                                      rows="3"></textarea>
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" name="greedy_functions"
-                                       id="greedy_functions">
-                                <label class="form-check-label" for="greedy_functions" data-toggle="tooltip"
+                                <input class="form-check-input" id="greedy_functions" name="greedy_functions"
+                                       type="checkbox">
+                                <label class="form-check-label" data-toggle="tooltip" for="greedy_functions"
                                        title="A partial match is enough to be blacklisted so 'hi' on the blacklist would blacklist 'hi_there'">
                                     Partial match ⓘ</label>
                             </div>
-<!--                            <div class="form-check">-->
-<!--                                <input type="checkbox" class="form-check-input" name="whitelist_functions"-->
-<!--                                       id="whitelist_functions">-->
-<!--                                <label class="form-check-label" for="whitelist_functions" data-toggle="tooltip"-->
-<!--                                       title="Make the blacklist a whitelist instead. So only obfuscate these names.">Whitelist</label>-->
-<!--                            </div>-->
+                            <!--                            <div class="form-check">-->
+                            <!--                                <input type="checkbox" class="form-check-input" name="whitelist_functions"-->
+                            <!--                                       id="whitelist_functions">-->
+                            <!--                                <label class="form-check-label" for="whitelist_functions" data-toggle="tooltip"-->
+                            <!--                                       title="Make the blacklist a whitelist instead. So only obfuscate these names.">Whitelist</label>-->
+                            <!--                            </div>-->
 
                         </div>
                         <div class="form-group col-3">
                             <label for="objective_blacklist">Objectives:</label>
-                            <textarea class="form-control" id="objective_blacklist" rows="3" name="objective_blacklist"
-                                      placeholder="Objectives"></textarea>
+                            <textarea class="form-control" id="objective_blacklist" name="objective_blacklist"
+                                      placeholder="Objectives"
+                                      rows="3"></textarea>
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" name="greedy_objectives"
-                                       id="greedy_objectives">
+                                <input class="form-check-input" id="greedy_objectives" name="greedy_objectives"
+                                       type="checkbox">
                                 <label class="form-check-label" data-toggle="tooltip"
-                                       title="A partial match is enough to be blacklisted so 'hi' on the blacklist would blacklist 'hi_there'"
-                                       for="greedy_objectives">Partial match ⓘ</label>
+                                       for="greedy_objectives"
+                                       title="A partial match is enough to be blacklisted so 'hi' on the blacklist would blacklist 'hi_there'">Partial
+                                    match ⓘ</label>
                             </div>
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" name="whitelist_objectives"
-                                       id="whitelist_objectives">
-                                <label class="form-check-label" for="whitelist_objectives" data-toggle="tooltip"
+                                <input class="form-check-input" id="whitelist_objectives" name="whitelist_objectives"
+                                       type="checkbox">
+                                <label class="form-check-label" data-toggle="tooltip" for="whitelist_objectives"
                                        title="Make the blacklist a whitelist instead. So only obfuscate these names.">Whitelist</label>
                             </div>
 
@@ -93,36 +97,39 @@
                         <div class="form-group col-3">
                             <label for="fake_players_blacklist">Fakeplayers:</label>
                             <textarea class="form-control" id="fake_players_blacklist" name="fake_players_blacklist"
-                                      rows="3"
-                                      placeholder="Fake players"></textarea>
+                                      placeholder="Fake players"
+                                      rows="3"></textarea>
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" name="greedy_fake_players"
-                                       id="greedy_fake_players">
+                                <input class="form-check-input" id="greedy_fake_players" name="greedy_fake_players"
+                                       type="checkbox">
                                 <label class="form-check-label" data-toggle="tooltip"
-                                       title="A partial match is enough to be blacklisted so 'hi' on the blacklist would blacklist 'hi_there'"
-                                       for="greedy_fake_players">Partial match ⓘ</label>
+                                       for="greedy_fake_players"
+                                       title="A partial match is enough to be blacklisted so 'hi' on the blacklist would blacklist 'hi_there'">Partial
+                                    match ⓘ</label>
                             </div>
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" name="whitelist_fake_players"
-                                       id="whitelist_fake_players">
-                                <label class="form-check-label" for="whitelist_fake_players" data-toggle="tooltip"
+                                <input class="form-check-input" id="whitelist_fake_players"
+                                       name="whitelist_fake_players"
+                                       type="checkbox">
+                                <label class="form-check-label" data-toggle="tooltip" for="whitelist_fake_players"
                                        title="Make the blacklist a whitelist instead. So only obfuscate these names.">Whitelist</label>
                             </div>
 
                         </div>
                         <div class="form-group col-3">
                             <label for="tag_blacklist">Tags+Names:</label>
-                            <textarea class="form-control" id="tag_blacklist" name="tag_blacklist" rows="3"
-                                      placeholder="Tags"></textarea>
+                            <textarea class="form-control" id="tag_blacklist" name="tag_blacklist" placeholder="Tags"
+                                      rows="3"></textarea>
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" name="greedy_tags" id="greedy_tags">
-                                <label class="form-check-label" for="greedy_tags" data-toggle="tooltip"
+                                <input class="form-check-input" id="greedy_tags" name="greedy_tags" type="checkbox">
+                                <label class="form-check-label" data-toggle="tooltip" for="greedy_tags"
                                        title="A partial match is enough to be blacklisted so 'hi' on the blacklist would blacklist 'hi_there'">Partial
                                     match ⓘ</label>
                             </div>
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" name="whitelist_tags" id="whitelist_tags">
-                                <label class="form-check-label" for="whitelist_tags" data-toggle="tooltip"
+                                <input class="form-check-input" id="whitelist_tags" name="whitelist_tags"
+                                       type="checkbox">
+                                <label class="form-check-label" data-toggle="tooltip" for="whitelist_tags"
                                        title="Make the blacklist a whitelist instead. So only obfuscate these names.">Whitelist</label>
                             </div>
                         </div>
@@ -130,7 +137,7 @@
                     <div class="form-row">
                         <div class="form-group col-6">
                             <label for="character_pool">Character pool:</label>
-                            <select class="form-control" name="character_pool" id="character_pool">
+                            <select class="form-control" id="character_pool" name="character_pool">
                                 <option>O0</option>
                                 <option>WV</option>
                                 <option>NM</option>
@@ -139,39 +146,41 @@
                         </div>
                         <div class="form-group col-6">
                             <label for="name_length">Obfuscated name length:</label>
-                            <input type="number" value="16" min="2" max="16" class="form-control"
-                                   id="name_length"
-                                   name="name_length"
-                                   placeholder="Name length">
+                            <input class="form-control" id="name_length" max="16" min="2" name="name_length"
+                                   placeholder="Name length"
+                                   type="number"
+                                   value="16">
                         </div>
                     </div>
                     <div class="form-row ">
                         <div class="form-group col-md-6">
                             <label for="datapack">Datapack zip folder</label>
-                            <input type="file" accept="application/zip" name="datapack_zip_file"
-                                   class="form-control-file"
-                                   id="datapack" required>
+                            <input accept="application/zip" class="form-control-file" id="datapack"
+                                   name="datapack_zip_file"
+                                   required type="file">
                         </div>
                         <div class="form-group col-md-6">
-                            <input type="checkbox" name="context-file" id="context-file" class="form-control-checkbox"
-                                   checked>
-                            <label for="context-file" data-toggle="tooltip"
+                            <input checked class="form-control-checkbox" id="context-file" name="context-file"
+                                   type="checkbox">
+                            <label data-toggle="tooltip" for="context-file"
                                    title="Add a .name_changes.json to the zip that has all name changes.">Include json
                                 file with changes</label>
 
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Obfuscate!</button>
+                    <button class="btn btn-primary" type="submit">Obfuscate!</button>
                 </form>
             </div>
         </div>
     </div>
 </main>
 <div class="container">
-    <a href="https://discord.gg/Utc467M"><img height="100" class="rounded float-right mt-4" alt="Discord logo and join"
+    <a href="https://discord.gg/Utc467M"><img alt="Discord logo and join" class="rounded float-right mt-4" height="100"
                                               src="{{ url_for('static', filename='Discord-Logo-White.png') }}"></a>
 </div>
 <footer class="footer fixed-bottom text-center py-3">
+    <span><a href="/faq">FAQ</a> | <a href="/information">How to use?</a></span>
+    <br>
     <span class="text-muted">Created by Quinten Cabo</span>
 </footer>
 <script>

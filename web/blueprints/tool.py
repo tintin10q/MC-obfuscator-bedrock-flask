@@ -3,9 +3,10 @@ import zipfile
 
 from flask import Blueprint, render_template, request, redirect, flash, send_file, Response
 from minecraft_obfuscate.obfuscate_zip import obfuscate_zip
-from werkzeug.utils import secure_filename
 from utils.IDgenerator import id_gen
 from utils.allowed_file import allowed_file
+from werkzeug.utils import secure_filename
+
 # obfuscate_zip()
 
 tool_blueprint = Blueprint('main', __name__)
@@ -32,7 +33,8 @@ def tool_post():
         flash('File does not end with a .zip file extension', "warning")
         return redirect(request.url)
 
-    config = {'function_blacklist': '', 'greedy_functions': False, 'whitelist_functions': False, 'objective_blacklist': '',
+    config = {'function_blacklist': '', 'greedy_functions': False, 'whitelist_functions': False,
+              'objective_blacklist': '',
               'greedy_objectives': False, 'whitelist_objectives': False, 'fake_players_blacklist': '',
               'greedy_fake_players': False, 'whitelist_fake_players': False, 'tag_blacklist': "", 'greedy_tags': False,
               'whitelist_tags': False, 'character_pool': 'O0', 'name_length': 16, 'datapack_zip_file': ''}
@@ -60,8 +62,8 @@ def tool_post():
                                     "whitelist": config.pop("whitelist_tags"),
                                     },
                            "fake_players": {"blacklist": config.pop("fake_players_blacklist").split("\r\n"),
-                                           "greedy": config.pop("greedy_fake_players"),
-                                           "whitelist": config.pop("whitelist_fake_players")}}
+                                            "greedy": config.pop("greedy_fake_players"),
+                                            "whitelist": config.pop("whitelist_fake_players")}}
     #  Magic zip code
     file_like_object = file.stream._file
     zipfile_ob = zipfile.ZipFile(file_like_object)
@@ -73,4 +75,4 @@ def tool_post():
     id_gen.reset(config["character_pool"], config["name_length"])
 
     final_zip = obfuscate_zip(files, config)
-    return send_file(final_zip, mimetype='application/zip',attachment_filename=filename, as_attachment=True)
+    return send_file(final_zip, mimetype='application/zip', attachment_filename=filename, as_attachment=True)

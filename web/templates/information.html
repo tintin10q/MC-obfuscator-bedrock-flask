@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta content="A tool for obfuscating minecraft bedrock command code." name="description"/>
+    <meta content="obfuscation, minecraft, code, bedrock, tool" name="keywords">
+    <meta content="Quinten Cabo" name="author">
+    <link href='{{url_for("static", filename="favicon.ico")}}' rel='icon' sizes="16x16" type='image/x-icon'/>
+
+    <!-- Bootstrap CSS -->
+    <link href='{{url_for("static", filename="css/bootstrap_dark.css")}}' rel="stylesheet">
+    <title>Minecraft code obfuscator</title>
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script async data-ad-client="ca-pub-9825615766394229"
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+<body>
+<br>
+<header>
+    <div class="container text-center">
+        <div class="col-md-12">
+            <h1>Obfuscator information</h1>
+            <p class="lead">How to use the tool.</p>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+
+        <div class="alert alert-dismissible fade show alert-{{ category }}"> {{ message }}
+            <button class="close" data-dismiss="alert" type="button">&times;</button>
+        </div>
+        {% endfor %}
+        {% endwith %}
+
+    </div>
+</header>
+<main>
+
+    <div class="container">
+        <h3>Basic Obfuscation</h3>
+        <p>This is a website that will obfuscate Minecraft bedrock function code. Obfuscation is protecting code by
+            making it hard to read.</p>
+
+        <div data-offset="0" data-spy="scroll" data-target="#navbar-example3">
+            <h4 id="item-1">Replace names</h4>
+            <p>The tool uses regex to replace all the names in your functions with random generated names from the
+                character pool. <br>This includes the names of:</p>
+            <ul>
+                <li>Function</li>
+                <li>Objectives</li>
+                <li>Tags</li>
+                <li>Entities</li>
+                <li>Fake players</li>
+            </ul>
+            <p>The same names are replaced with the same obfuscated name in every file. So, if an objective in one file
+                is called jump and it is replaced with OO00O then in every other function jump will be replaced OO00O.
+                As function names are changed the function file names are also updated accordingly. The website knows
+                how to deal with subfolders! This means that all your subfolders will be gone and replaced by one long
+                list of obfuscated function names. </p>
+            <h4>Remove readability</h4>
+            <p>Every line that starts with a # is removed. Empty lines to separate code are also removed.</p>
+            <h3>Customization options</h3>
+            <h4>Use a blacklist</h4>
+            <p>If you do not want to replace some names for any reason then you can blacklist the names per type. </p>
+            <p>There is also a <b>partial match</b> option. If this option is enabled than every name that has an item
+                on the blacklist as powill be blacklisted as well. This can for instance be useful if you have loads of
+                functions called main, but they are all in different subfolders. Then using partial match and just the
+                world main all the functions with main in them are blacklisted. </p>
+            <p>There is also a whitelist mode. With this enabled the blacklist will act like a whitelist so it will only
+                obfuscate the names on the list. This option is not provided for function names because it caused a lot
+                of issues with the name updating of the function files.</p>
+
+            <h4>Generate a list of changes</h4>
+            <p>If the include json file with changes checkbox is checked a json file with all the changes is included
+                with all the changes per category and all the settings used. </p>
+
+            <h4>Character pools</h4>
+            <p>You can choose from 4-character pool presets. This will be the characters that can be used to create new
+                names.</p>
+            <h4>Obfuscated name length</h4>
+            <p>You can set the start length of the names that will be generated. If the website runs out of possible
+                names to generate it will increase the length. Generally, it is not recommended to change this setting.
+                Do not move the length higher than 16 if you obfuscate scoreboard objectives as these names can not be
+                longer than 16.</p>
+        </div>
+
+    </div>
+</main>
+
+<footer class="footer  text-center py-3">
+    <span><a href="/">Obfuscator</a> | <a href="/faq">FAQ </a> </span>
+    <br>
+    <span class="text-muted">Created by Quinten Cabo</span>
+</footer>
+
+
+</body>
+</html>
