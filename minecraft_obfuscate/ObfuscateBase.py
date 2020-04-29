@@ -4,7 +4,6 @@ from utils.IDgenerator import id_gen
 
 
 class ObfuscateBase():
-    blanklines_pattern = re.compile("\n\n")
     comment_pattern = re.compile("#.{0,}\n?")
 
     def __init__(self, name: str, regex_patterns):
@@ -27,10 +26,6 @@ class ObfuscateBase():
         # Remove comments
         if True:  # TODO: config["remove_comments"]
             text = re.sub(ObfuscateBase.comment_pattern, "", text)
-        # Remove blank lines
-
-        while re.search(ObfuscateBase.blanklines_pattern, text) is not None:
-            text = re.sub(ObfuscateBase.blanklines_pattern, "\n", text)
-        if text[0] == "\n":
-            text = text[1:]
+        while "\n\n" in text:
+            text = text.replace("\n\n","\n")
         return text
