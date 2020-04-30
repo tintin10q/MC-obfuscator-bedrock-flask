@@ -28,4 +28,6 @@ class ObfuscateBase():
             text = re.sub(ObfuscateBase.comment_pattern, "", text)
         while "\n\n" in text:
             text = text.replace("\n\n","\n")
+        if text[0] == "\n":
+            text = text[1:]
         return text

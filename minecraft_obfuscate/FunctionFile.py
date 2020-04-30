@@ -1,16 +1,50 @@
 import os
 import io
+import re
 from utils.IDgenerator import id_gen
 
 
 class FunctionFile:
+    objective_patterns = (
+        r"scoreboard objectives (?:remove|add) (\S+)",
+        r"scoreboard objectives setdisplay (?:sidebar|belowname|list) (\S+)",
+        r"scoreboard players (?:reset|test|random|set|add|remove) \S+ (\S+)",
+        r"scoreboard players operation \S+ (\S+)",
+        r"scoreboard players operation \S+ \S+ (?:%=|\*=|\+=|-=|/=|<|=|>|><) \S+ (\S+)",
+    )
+
+    tag_patterns = (
+        r"tag=!?(\w+)",
+        r"tag \S+ (?:add|remove) (\S+)",
+        r"name=(\w+)",
+        r"summon\s\S+\s[\~\^]?[\+\-]{0,}[0-9]{0,}\s[\~\^]?[\+\-]{0,}[0-9]{0,}\s[\~\^]?[\+\-]{0,}[0-9]{0,}\s\S+\s(\w+)"
+    )
+
+    fake_player_patterns = (
+        r"scoreboard players (?:reset|test|random|set|add) ([^@]\S+)",
+        r"scoreboard players operation ([^@]\S+)",
+        r"scoreboard players operation \S+ \S+ (?:%=|\*=|\+=|-=|/=|<|=|>|><) ([^@]\S+)"
+    )
+
+    # if you only have one pattern make sure to make it a list! #
+    function_patterns = [
+        r"function (\S+)"
+    ]
+
+    patterns = {
+        "objectives": [re.compile(pattern) for pattern in objective_patterns],
+        "tags": [re.compile(pattern) for pattern in tag_patterns],
+        "fake_players": [re.compile(pattern) for pattern in fake_player_patterns],
+        "functions": [re.compile(pattern) for pattern in function_patterns]
+    }
 
     def __init__(self, path, text):
+        self.names_in_file = set()
         self.call_name = path
         self.call_name = self.call_name.replace(".mcfunction", "")
         self.call_name = self.call_name.replace("\\", r"/")
         self.call_name = self.call_name  # Name used by other functions
-        self.name = id_gen() # Function name
+        self.name = id_gen()  # Function name
         self.text = text  # Function text
         self.text = self.text.replace("\r\n", "\n")  # Fix for the \r\n to \n
         self.output_file_path = self.set_file_path(self.name)  # Path to the output file
@@ -20,10 +54,33 @@ class FunctionFile:
 
     def obfuscate(self, context):
         for obfuscate_object in context["obfuscate_objects"]:
-            self.text = obfuscate_object.obfuscate(self.text)
+            if obfuscate_object.name in self.names_in_file:  # Only search if name is in set, all the work for this line
+                self.text = obfuscate_object.obfuscate(self.text)  # But it is great now
         self.sync_file_name(context["key"]["functions"])
         self.check_blacklist(context["blacklist"]["functions"])
         return
+
+    def find_obfuscate_objects(self, type, blacklist):
+        assert type in FunctionFile.patterns, "{} not one of {}".format(type, FunctionFile.patterns.keys())
+        patterns = FunctionFile.patterns[type]
+        results = [re.findall(r, self.text) for r in patterns]
+        results = {item for sublist in results for item in sublist}
+        if blacklist["whitelist"]:
+            whitelist = {item for item in results if item in blacklist["blacklist"]}
+            if blacklist["greedy"]:
+                for item in results:
+                    for whitelist_item in blacklist["blacklist"]:
+                        if whitelist_item in item:
+                            whitelist.add(item)
+            results = whitelist
+        else:
+            for blacklist_item in blacklist["blacklist"]:
+                if blacklist_item in results:
+                    results.remove(blacklist_item)
+                if blacklist["greedy"]:
+                    results = {result for result in results if blacklist_item not in result}
+        self.names_in_file = self.names_in_file | results  # Save results in class
+        return results
 
     def check_blacklist(self, blacklist):
         # This will change the output path

@@ -6,7 +6,7 @@ class Objective(ObfuscateBase):
         regex_patterns = (
             r"(scoreboard objectives (?:remove|add) )({name})()",
             r"(scoreboard objectives setdisplay (?:sidebar|belowname|list) )({name})()",
-            r"(scoreboard players (?:reset|test|random|set|add) \S+ )({name})()",
+            r"(scoreboard players (?:reset|test|random|set|add|remove) \S+ )({name})()",
             r"(scoreboard players operation \S+ )({name})()",
             r"(scoreboard players operation \S+ \S+ (?:%=|\*=|\+=|-=|/=|<|=|>|><) \S+ )({name})()",
             r"(\[\S*scores=[{{]\S*\b)({name})(\b\S+}})"

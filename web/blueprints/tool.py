@@ -75,4 +75,4 @@ def tool_post():
     id_gen.reset(config["character_pool"], config["name_length"])
 
     final_zip = obfuscate_zip(files, config)
-    return send_file(final_zip, mimetype='application/zip', attachment_filename=filename, as_attachment=True)
+    return send_file(final_zip, mimetype='application/zip', attachment_filename="Obfuscated "+filename , as_attachment=True)

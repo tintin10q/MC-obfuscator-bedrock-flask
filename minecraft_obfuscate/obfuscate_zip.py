@@ -13,31 +13,6 @@ from minecraft_obfuscate.Objective import Objective
 from minecraft_obfuscate.Tag import Tag
 
 
-def find_obfuscate_objects(text, patterns, blacklist):
-    patterns = [re.compile(r) for r in patterns]
-    results = [re.findall(r, text) for r in patterns]
-    results = [item for sublist in results for item in sublist]  # Flatten the list
-    results = list(set(results))  # Remove duplicates
-    if blacklist["whitelist"]:
-        whitelist = []
-        for item in results:
-
-            if item in blacklist["blacklist"]:
-                whitelist.append(item)
-            if blacklist["greedy"]:
-                for whitelist_item in blacklist["blacklist"]:
-                    if whitelist_item in item:
-                        whitelist.append(item)
-        return whitelist
-    else:
-        for blacklist_item in blacklist["blacklist"]:
-            if blacklist_item in results:
-                results.remove(blacklist_item)
-            if blacklist["greedy"]:
-                results = [result for result in results if blacklist_item not in result]
-    return results
-
-
 def sterilize(obj):
     object_type = type(obj)
     if isinstance(obj, dict):
@@ -54,50 +29,19 @@ def obfuscate_zip(zip_files, config):
     blacklist = config["blacklist"]
     function_files = [FunctionFile(path=zip_file[0], text=zip_file[1]) for zip_file in zip_files]
 
-    all_text = ""
-    for function_file in function_files:
-        all_text += function_file.text + "\n"  # Damm that was a nasty one for sure with the \n
-    # All the patterns
-    objective_patterns = (
-        r"scoreboard objectives (?:remove|add) (\S+)",
-        r"scoreboard objectives setdisplay (?:sidebar|belowname|list) (\S+)",
-        r"scoreboard players (?:reset|test|random|set|add) \S+ (\S+)",
-        r"scoreboard players operation \S+ (\S+)",
-        r"scoreboard players operation \S+ \S+ (?:%=|\*=|\+=|-=|/=|<|=|>|><) \S+ (\S+)",
-    )
-
-    tag_patterns = (
-        r"tag=(\w+)",
-        r"tag \S+ (?:add|remove) (\S+)",
-        r"name=(\w+)",
-        r"summon\s\S+\s[\~\^]?[\+\-]{0,}[0-9]{0,}\s[\~\^]?[\+\-]{0,}[0-9]{0,}\s[\~\^]?[\+\-]{0,}[0-9]{0,}\s\S+\s(\w+)"
-    )
-
-    fake_player_patterns = (
-        r"scoreboard players (?:reset|test|random|set|add) ([^@]\S+)",
-        r"scoreboard players operation ([^@]\S+)",
-        r"scoreboard players operation \S+ \S+ (?:%=|\*=|\+=|-=|/=|<|=|>|><) ([^@]\S+)"
-    )
-
-    # if you only have one pattern make sure to make it a list! #
-    function_patterns = [
-        r"function (\S+)"
-    ]
-
     # Find all the names
-    tags = find_obfuscate_objects(all_text, tag_patterns, blacklist["tags"])
-    objectives = find_obfuscate_objects(all_text, objective_patterns, blacklist["objectives"])
-    fake_players = find_obfuscate_objects(all_text, fake_player_patterns, blacklist["fake_players"])
-    functions = find_obfuscate_objects(all_text, function_patterns, blacklist["functions"])
+    tags, objectives, fake_players, functions = set(), set(), set(), set()
+    for function_file in function_files:
+        tags = tags | function_file.find_obfuscate_objects("tags", blacklist["tags"])
+        objectives = objectives | function_file.find_obfuscate_objects("objectives",  blacklist["objectives"])
+        fake_players = fake_players | function_file.find_obfuscate_objects("fake_players",  blacklist["fake_players"])
+        functions = functions | function_file.find_obfuscate_objects("functions",  blacklist["functions"])
+
     obfuscate_objects = []
-    for tag in tags:
-        obfuscate_objects.append(Tag(tag))
-    for objective in objectives:
-        obfuscate_objects.append(Objective(objective))
-    for fake_player in fake_players:
-        obfuscate_objects.append(FakePlayer(fake_player))
-    for function in functions:
-        obfuscate_objects.append(Function(function))
+    obfuscate_objects += [Tag(tag) for tag in tags]
+    obfuscate_objects += [Objective(objective) for objective in objectives]
+    obfuscate_objects += [FakePlayer(fake_player) for fake_player in fake_players]
+    obfuscate_objects += [Function(function) for function in functions]
 
     obfuscate_objects.sort(key=operator.attrgetter('len'),
                            reverse=True)  # sort the list so longer names get replaced first
