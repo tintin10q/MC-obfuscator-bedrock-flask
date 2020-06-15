@@ -11,6 +11,7 @@ class FunctionFile:
         r"scoreboard players (?:reset|test|random|set|add|remove) \S+ (\S+)",
         r"scoreboard players operation \S+ (\S+)",
         r"scoreboard players operation \S+ \S+ (?:%=|\*=|\+=|-=|/=|<|=|>|><) \S+ (\S+)",
+        r"scores={(?:(\w+)=[.\d]*)(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?"
     )
 
     tag_patterns = (
@@ -60,11 +61,15 @@ class FunctionFile:
         self.check_blacklist(context["blacklist"]["functions"])
         return
 
-    def find_obfuscate_objects(self, type, blacklist):
-        assert type in FunctionFile.patterns, "{} not one of {}".format(type, FunctionFile.patterns.keys())
-        patterns = FunctionFile.patterns[type]
+    def find_obfuscate_objects(self, name_type, blacklist):
+        assert name_type in FunctionFile.patterns, "{} not one of {}".format(name_type, FunctionFile.patterns.keys())
+        patterns = FunctionFile.patterns[name_type]
         results = [re.findall(r, self.text) for r in patterns]
+        if name_type == "objectives":
+            print("=====================\n{}".format(results))
         results = {item for sublist in results for item in sublist}
+        if name_type == "objectives":
+            print("{}\n=====================".format(results))
         if blacklist["whitelist"]:
             whitelist = {item for item in results if item in blacklist["blacklist"]}
             if blacklist["greedy"]:
