@@ -31,17 +31,17 @@ def obfuscate_zip(zip_files, config):
 
     # Find all the names
     tags, objectives, fake_players, functions = set(), set(), set(), set()
-    for function_file in function_files:
+    for function_file in function_files:  # | is used to merge sets
         tags = tags | function_file.find_obfuscate_objects("tags", blacklist["tags"])
-        objectives = objectives | function_file.find_obfuscate_objects("objectives",  blacklist["objectives"])
-        fake_players = fake_players | function_file.find_obfuscate_objects("fake_players",  blacklist["fake_players"])
-        functions = functions | function_file.find_obfuscate_objects("functions",  blacklist["functions"])
+        objectives = objectives | function_file.find_obfuscate_objects("objectives", blacklist["objectives"])
+        fake_players = fake_players | function_file.find_obfuscate_objects("fake_players", blacklist["fake_players"])
+        functions = functions | function_file.find_obfuscate_objects("functions", blacklist["functions"])
 
     obfuscate_objects = []
     obfuscate_objects += [Tag(tag) for tag in tags]
-    obfuscate_objects += [Objective(objective) for objective in objectives]
     obfuscate_objects += [FakePlayer(fake_player) for fake_player in fake_players]
     obfuscate_objects += [Function(function) for function in functions]
+    obfuscate_objects += [Objective(objective) for objective in objectives]
 
     obfuscate_objects.sort(key=operator.attrgetter('len'),
                            reverse=True)  # sort the list so longer names get replaced first

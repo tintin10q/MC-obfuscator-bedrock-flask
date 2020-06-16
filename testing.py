@@ -1,9 +1,15 @@
 import re
-pattern = re.compile(r"scores={(?:(\w+)=[.\d]*)(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?")
-result = re.findall(pattern,"@e[distance=..10,scores={score_1=19,score_2=14}]]\n@e[scores={score_1=19,score_2=14}]]")
-print(result)
 
+p = r'([^{=.,}]+)='
 
-pattern = re.compile(r"(?:scores={|\d|,)\s*([^|{}]+?)(?=\s*?(?:,|}))")
-result = re.findall(pattern,"@e[scores={aap=3,   baok=3,  baad=3},tag=boy]")
-print(result)
+p = re.compile(p)
+
+a = ['{aap8je=10}', '{aapje=10..}', '{aapje=..10}', '{aapje=10..10}', '{aapje=10,dan=10}', '{aapje=10,dan=10..12}', '{aapje=10,dan=10..}', '{aapje=10,dan=..10}', '{aapje=10,dan=10}', '{aapje=..10,dan=10..12}', '{aapje=10..12,dan=10..}', '{aapje=10..,dan=..10}']
+
+b = set()
+for i in a:
+    for j in re.findall(p, i):
+        b.add(j)
+
+from pprint import pp
+pp(b)

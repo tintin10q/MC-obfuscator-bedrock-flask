@@ -1,5 +1,5 @@
-import os
 import io
+import os
 import re
 from utils.IDgenerator import id_gen
 
@@ -11,7 +11,7 @@ class FunctionFile:
         r"scoreboard players (?:reset|test|random|set|add|remove) \S+ (\S+)",
         r"scoreboard players operation \S+ (\S+)",
         r"scoreboard players operation \S+ \S+ (?:%=|\*=|\+=|-=|/=|<|=|>|><) \S+ (\S+)",
-        r"scores={(?:(\w+)=[.\d]*)(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?(?:,(\w+)=[.\d]*)?"
+        r"scores=({.+})"
     )
 
     tag_patterns = (
@@ -39,6 +39,8 @@ class FunctionFile:
         "functions": [re.compile(pattern) for pattern in function_patterns]
     }
 
+    group_6_p = re.compile(r'([{^=.,}]+)=')
+
     def __init__(self, path, text):
         self.names_in_file = set()
         self.call_name = path
@@ -65,11 +67,11 @@ class FunctionFile:
         assert name_type in FunctionFile.patterns, "{} not one of {}".format(name_type, FunctionFile.patterns.keys())
         patterns = FunctionFile.patterns[name_type]
         results = [re.findall(r, self.text) for r in patterns]
-        if name_type == "objectives":
-            print("=====================\n{}".format(results))
+
+        if name_type == 'objectives' and len(results[5]): # Fix for group 6 find scores in selector problem
+            results[5] = self.fix_group_6(results[5])
         results = {item for sublist in results for item in sublist}
-        if name_type == "objectives":
-            print("{}\n=====================".format(results))
+        # Start looking at the blacklist
         if blacklist["whitelist"]:
             whitelist = {item for item in results if item in blacklist["blacklist"]}
             if blacklist["greedy"]:
@@ -84,6 +86,7 @@ class FunctionFile:
                     results.remove(blacklist_item)
                 if blacklist["greedy"]:
                     results = {result for result in results if blacklist_item not in result}
+
         self.names_in_file = self.names_in_file | results  # Save results in class
         return results
 
@@ -108,5 +111,14 @@ class FunctionFile:
                 self.output_file_path = self.set_file_path(self.name)
                 return
 
+    @staticmethod
+    def fix_group_6(group_6):
+        output = set()
+        for scores in group_6:
+            for j in re.findall(FunctionFile.group_6_p, scores):
+                output.add(j)
+        return output
+            
+            
     def set_file_path(self, file_name):
         return file_name + ".mcfunction"
