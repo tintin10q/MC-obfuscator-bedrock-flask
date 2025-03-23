@@ -1,5 +1,10 @@
+> [!warning]
+> This is outdated the regexes have to be fixed or even better implement a propper parser. 
+
+
 # bedrock-function-obfuscator
 The obfuscation works with the minecraft_obfuscate module created by me
+
 
 First turn every function file into a class.
 
